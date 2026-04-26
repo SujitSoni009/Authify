@@ -5,6 +5,11 @@ const signupPane = document.getElementById("signupPane");
 const loginForm = document.getElementById("loginForm");
 const signupForm = document.getElementById("signupForm");
 
+// Get the API base URL based on environment
+const API_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:8080'
+    : window.location.origin;
+
 function setActivePane(active) {
     const loginTab = loginBtn;
     const signupTab = signupBtn;
@@ -36,7 +41,7 @@ signupForm.addEventListener("submit", async (e) => {
         password: document.getElementById("signupPassword").value
     };
 
-    const res = await fetch("http://localhost:8080/signup", {
+    const res = await fetch(`${API_URL}/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
@@ -44,6 +49,13 @@ signupForm.addEventListener("submit", async (e) => {
 
     const msg = await res.text();
     document.getElementById("signupMsg").innerText = msg;
+
+    if (msg.includes("successful")) {
+        setTimeout(() => {
+            localStorage.setItem("user", data.email);
+            window.location.href = "dashboard.html";
+        }, 1500);
+    }
 });
 
 loginForm.addEventListener("submit", async (e) => {
@@ -54,7 +66,7 @@ loginForm.addEventListener("submit", async (e) => {
         password: document.getElementById("loginPassword").value
     };
 
-    const res = await fetch("http://localhost:8080/login", {
+    const res = await fetch(`${API_URL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
@@ -62,7 +74,7 @@ loginForm.addEventListener("submit", async (e) => {
 
     const msg = await res.text();
 
-    if (res.ok) {
+    if (msg.includes("successful")) {
         localStorage.setItem("user", data.email);
         window.location.href = "dashboard.html";
     } else {
