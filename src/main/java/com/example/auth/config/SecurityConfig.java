@@ -15,7 +15,7 @@ public class SecurityConfig {
         http
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/signup", "/login", "/h2-console/**", "/index.html", "/dashboard.html", "/index.css", "/index.js").permitAll()
+                .requestMatchers("/", "/signup", "/login", "/h2-console/**", "/index.html", "/dashboard.html", "/index.css", "/index.js").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .headers().frameOptions().disable(); // for H2 console
